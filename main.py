@@ -14,13 +14,30 @@ class Note(db.Model):
     title = db.Column(db.String(80))
     body = db.Column(db.Text)
 
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
+# custom initialize method not necessary
+    # def __init__(self, title, body):
+        # self.title = title
+        # self.body = body
 
 @app.route("/")
 def home():
     return render_template("home.html")
+
+@app.route("/notes/create", methods=["GET", "POST"])
+def create_note():
+    db.create_all()
+    if request.method == "GET":
+        return render_template("create_note.html")
+    else:
+        title = request.form["title"]
+        body = request.form["body"]
+
+        note = Note(title=title, body=body)
+
+        db.session.add(note)
+        db.session.commit()
+
+        return redirect("/notes/create")
 
 if __name__ == "__main__":
     app.run(debug=True)
