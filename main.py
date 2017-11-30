@@ -25,6 +25,7 @@ def home():
 
 @app.route("/notes/create", methods=["GET", "POST"])
 def create_note():
+    db.create_all()
     if request.method == "GET":
         return render_template("create_note.html")
     else:
